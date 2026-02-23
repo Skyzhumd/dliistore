@@ -1,131 +1,699 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DLIStore App Style</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DLIStore — Top Up Gaming</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
-body{background:#f1f5f9}
-.topbar{background:#1f7a73;color:white;padding:18px;font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px}
-.search-box{padding:15px;background:#f1f5f9}
-.search-box input{width:100%;padding:12px;border-radius:25px;border:none;background:#e2e8f0}
-.list-item{display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border-bottom:1px solid #e2e8f0;cursor:pointer;transition:.2s}
-.list-item:active{background:#d1fae5}
-.icon{width:42px;height:42px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:600}
-.page{display:none}
-.page.active{display:block}
-.product-card{background:white;margin:10px 15px;padding:14px;border-radius:14px;box-shadow:0 4px 10px rgba(0,0,0,.05);cursor:pointer;transition:.2s}
-.product-card:active{transform:scale(.97);background:#ecfdf5}
-.product-title{font-weight:600;font-size:14px}
-.product-sub{font-size:11px;color:#64748b}
-.product-price{margin-top:5px;color:#0f766e;font-weight:700}
-.form-section{background:white;margin:15px;padding:18px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);display:none}
-.form-group{margin-bottom:12px}
-label{font-size:12px;margin-bottom:4px;display:block}
-input{width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1}
-.pay-btn{width:100%;padding:12px;border:none;border-radius:10px;background:#25D366;color:white;font-weight:600;margin-top:8px}
-.bottom-nav{position:fixed;bottom:0;width:100%;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}
-.bottom-nav div{font-size:12px;text-align:center;color:#64748b}
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131c;
+    --surface2: #1c1c2a;
+    --accent: #7c3aed;
+    --accent2: #06b6d4;
+    --gold: #f59e0b;
+    --green: #10b981;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Noise texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* Ambient glow blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.15;
+  }
+  .blob-1 { width: 350px; height: 350px; background: var(--accent); top: -100px; right: -80px; }
+  .blob-2 { width: 250px; height: 250px; background: var(--accent2); bottom: 100px; left: -80px; }
+
+  .page { display: none; position: relative; z-index: 1; padding-bottom: 90px; }
+  .page.active { display: block; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 20px 16px;
+    position: sticky;
+    top: 0;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 10;
+  }
+  .topbar-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    background: linear-gradient(135deg, #7c3aed, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .topbar-badge {
+    margin-left: auto;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .back-btn {
+    width: 38px; height: 38px;
+    background: var(--surface);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    font-size: 16px;
+    transition: background .2s;
+  }
+  .back-btn:active { background: var(--surface2); }
+
+  /* ── HERO ── */
+  .hero {
+    margin: 20px 20px 10px;
+    background: linear-gradient(135deg, #1c1332 0%, #0f1a2e 100%);
+    border-radius: 24px;
+    padding: 28px 24px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '⚡';
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: 0.07;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: rgba(124,58,237,0.2);
+    border: 1px solid rgba(124,58,237,0.4);
+    color: #a78bfa;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .hero h1 span {
+    background: linear-gradient(90deg, #7c3aed, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── SEARCH ── */
+  .search-wrap { padding: 14px 20px; }
+  .search-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 12px 18px;
+    transition: border-color .2s;
+  }
+  .search-inner:focus-within { border-color: rgba(124,58,237,0.5); }
+  .search-inner input {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    flex: 1;
+  }
+  .search-inner input::placeholder { color: var(--muted); }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--muted);
+    padding: 0 20px 12px;
+  }
+
+  /* ── GAME CARDS ── */
+  .game-grid { padding: 0 20px; display: flex; flex-direction: column; gap: 14px; }
+  .game-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform .2s, border-color .2s;
+  }
+  .game-card:active { transform: scale(0.97); }
+  .game-card.ml { border-color: rgba(124,58,237,0.3); }
+  .game-card.ff { border-color: rgba(245,158,11,0.3); }
+  .game-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+  .game-card.ml::after { background: linear-gradient(135deg, rgba(124,58,237,0.1), transparent); }
+  .game-card.ff::after { background: linear-gradient(135deg, rgba(245,158,11,0.1), transparent); }
+  .game-card:active::after { opacity: 1; }
+
+  .game-icon {
+    width: 58px; height: 58px;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .game-icon.ml {
+    background: linear-gradient(135deg, #4c1d95, #7c3aed);
+    box-shadow: 0 0 20px rgba(124,58,237,0.4);
+    color: white;
+  }
+  .game-icon.ff {
+    background: linear-gradient(135deg, #92400e, #f59e0b);
+    box-shadow: 0 0 20px rgba(245,158,11,0.4);
+    color: white;
+  }
+  .game-info { flex: 1; }
+  .game-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .game-desc { font-size: 12px; color: var(--muted); }
+  .game-arrow {
+    width: 32px; height: 32px;
+    background: var(--surface2);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* ── TRUST BADGES ── */
+  .trust-row {
+    display: flex;
+    gap: 10px;
+    padding: 20px 20px 10px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .trust-row::-webkit-scrollbar { display: none; }
+  .trust-badge {
+    flex-shrink: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .trust-icon { font-size: 16px; }
+
+  /* ── PRODUCT LIST ── */
+  .product-header {
+    padding: 20px 20px 10px;
+  }
+  .product-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  .product-header p { font-size: 13px; color: var(--muted); margin-top: 3px; }
+
+  .product-grid { padding: 0 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .product-card {
+    background: var(--surface);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform .15s, border-color .2s;
+  }
+  .product-card:active { transform: scale(0.95); }
+  .product-card.selected {
+    border-color: var(--accent);
+    background: rgba(124,58,237,0.12);
+  }
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.05;
+  }
+  .product-card.ml-card { color: #7c3aed; }
+  .product-card.ff-card { color: #f59e0b; }
+  .product-diamond {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .product-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+  .product-tag {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .product-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: currentColor;
+  }
+  .product-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--gold);
+    color: #000;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .selected-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 22px;
+    height: 22px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  /* ── ORDER FORM ── */
+  .form-wrap {
+    margin: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    display: none;
+    animation: slideUp .3s ease;
+  }
+  .form-wrap.visible { display: block; }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .form-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .form-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+  .selected-product-chip {
+    background: rgba(124,58,237,0.15);
+    border: 1px solid rgba(124,58,237,0.4);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .chip-icon { font-size: 18px; }
+  .chip-text { font-weight: 600; }
+  .chip-price { margin-left: auto; color: #a78bfa; font-weight: 700; font-size: 14px; }
+
+  .field-group { margin-bottom: 14px; }
+  .field-label { font-size: 12px; font-weight: 500; color: var(--muted); margin-bottom: 8px; display: block; letter-spacing: 0.3px; }
+  .field-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 13px 16px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .field-input:focus { border-color: var(--accent); }
+  .field-input[readonly] { opacity: 0.6; cursor: not-allowed; }
+
+  .pay-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #25D366, #128C7E);
+    border: none;
+    border-radius: 16px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+    box-shadow: 0 8px 24px rgba(37,211,102,0.3);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .pay-btn:active { transform: scale(0.97); box-shadow: 0 4px 12px rgba(37,211,102,0.2); }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(19,19,28,0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 20px calc(12px + env(safe-area-inset-bottom));
+    z-index: 20;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    min-width: 60px;
+  }
+  .nav-icon {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: background .2s;
+  }
+  .nav-icon.active {
+    background: linear-gradient(135deg, rgba(124,58,237,0.3), rgba(6,182,212,0.2));
+    border: 1px solid rgba(124,58,237,0.4);
+  }
+  .nav-label { font-size: 10px; color: var(--muted); font-weight: 500; }
+  .nav-label.active { color: #a78bfa; }
 </style>
 </head>
-<body><div class="page active" id="homePage">
-<div class="topbar">Topup Game</div>
-<div class="search-box"><input placeholder="Cari Topup Game"></div><div class="list-item" onclick="openGame('ML')">
-<div class="icon">ML</div>
-<div>Mobile Legends</div>
-</div><div class="list-item" onclick="openGame('FF')">
-<div class="icon">FF</div>
-<div>Diamond Free Fire</div>
-</div>
-</div><div class="page" id="productPage">
-<div class="topbar" onclick="backHome()">← Pilih Nominal</div>
-<div id="productList"></div><div class="form-section" id="formOrder">
-<h3 style="font-size:15px;margin-bottom:10px">Lengkapi Data</h3>
-<div class="form-group">
-<label>Nama</label>
-<input type="text" id="nama">
-</div>
-<div class="form-group">
-<label>ID Game</label>
-<input type="text" id="idgame">
-</div>
-<div class="form-group">
-<label>Produk</label>
-<input type="text" id="produk" readonly>
-</div>
-<button class="pay-btn" onclick="kirimWA()">Bayar via WhatsApp</button>
-</div>
-</div><div class="bottom-nav">
-<div>Home</div>
-<div>Transaksi</div>
-<div>Akun</div>
-</div><script>
-var currentGame='';
+<body>
 
-var products={
-ML:[
-{nama:'100 Diamond',harga:'Rp 26.000'},
-{nama:'112 Diamond',harga:'Rp 31.000'},
-{nama:'144 Diamond',harga:'Rp 40.000'},
-{nama:'172 Diamond',harga:'Rp 46.000'},
-{nama:'185 Diamond',harga:'Rp 48.000'},
-{nama:'222 Diamond',harga:'Rp 58.000'},
-{nama:'229 Diamond',harga:'Rp 62.000'},
-{nama:'240 Diamond',harga:'Rp 64.000'},
-{nama:'257 Diamond',harga:'Rp 66.000'}
-],
-FF:[
-{nama:'100 Diamond',harga:'Rp 14.000'},
-{nama:'140 Diamond',harga:'Rp 18.000'},
-{nama:'200 Diamond',harga:'Rp 26.000'},
-{nama:'210 Diamond',harga:'Rp 28.000'},
-{nama:'300 Diamond',harga:'Rp 38.000'},
-{nama:'355 Diamond',harga:'Rp 43.000'},
-{nama:'500 Diamond',harga:'Rp 60.000'},
-{nama:'720 Diamond',harga:'Rp 85.000'},
-{nama:'1000 Diamond',harga:'Rp 118.000'},
-{nama:'1450 Diamond',harga:'Rp 170.000'}
-]
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<!-- HOME PAGE -->
+<div class="page active" id="homePage">
+  <div class="topbar">
+    <div class="topbar-logo">DLIStore</div>
+    <div class="topbar-badge">Official</div>
+  </div>
+
+  <div class="hero">
+    <div class="hero-tag">🔥 Top Up Terpercaya</div>
+    <h1>Top Up Gaming<br><span>Instant & Aman</span></h1>
+    <p>Proses cepat, harga terjangkau,<br>layanan 24 jam nonstop.</p>
+  </div>
+
+  <div class="trust-row">
+    <div class="trust-badge"><span class="trust-icon">⚡</span> Proses Instan</div>
+    <div class="trust-badge"><span class="trust-icon">🔒</span> 100% Aman</div>
+    <div class="trust-badge"><span class="trust-icon">💎</span> Harga Terbaik</div>
+    <div class="trust-badge"><span class="trust-icon">🕐</span> 24/7 Support</div>
+  </div>
+
+  <div class="search-wrap">
+    <div class="search-inner">
+      <span style="font-size:16px; color:var(--muted)">🔍</span>
+      <input placeholder="Cari game favorit kamu..." />
+    </div>
+  </div>
+
+  <div class="section-label">Pilih Game</div>
+
+  <div class="game-grid">
+    <div class="game-card ml" onclick="openGame('ML')">
+      <div class="game-icon ml">ML</div>
+      <div class="game-info">
+        <div class="game-name">Mobile Legends</div>
+        <div class="game-desc">Diamond • Skin • Pass</div>
+      </div>
+      <div class="game-arrow">›</div>
+    </div>
+    <div class="game-card ff" onclick="openGame('FF')">
+      <div class="game-icon ff">FF</div>
+      <div class="game-info">
+        <div class="game-name">Free Fire</div>
+        <div class="game-desc">Diamond • Bundle • Pet</div>
+      </div>
+      <div class="game-arrow">›</div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT PAGE -->
+<div class="page" id="productPage">
+  <div class="topbar">
+    <div class="back-btn" onclick="backHome()">‹</div>
+    <div id="pageTitle" style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px;">Pilih Nominal</div>
+    <div class="topbar-badge" style="margin-left:auto">Hot 🔥</div>
+  </div>
+
+  <div class="product-header">
+    <h2 id="productHeading">Diamond Pack</h2>
+    <p id="productSub">Pilih nominal yang kamu butuhkan</p>
+  </div>
+
+  <div class="product-grid" id="productList"></div>
+
+  <div class="form-wrap" id="formOrder">
+    <div class="form-title">Detail Order</div>
+    <div class="form-subtitle">Isi data dengan benar ya!</div>
+
+    <div class="selected-product-chip" id="selectedChip">
+      <span class="chip-icon">💎</span>
+      <span class="chip-text" id="chipText">—</span>
+      <span class="chip-price" id="chipPrice">—</span>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">👤 Nama Kamu</label>
+      <input class="field-input" type="text" id="nama" placeholder="Masukkan nama...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">🎮 ID Game</label>
+      <input class="field-input" type="text" id="idgame" placeholder="Masukkan ID game...">
+    </div>
+    <div class="field-group">
+      <label class="field-label">📦 Produk</label>
+      <input class="field-input" type="text" id="produk" readonly>
+    </div>
+
+    <button class="pay-btn" onclick="kirimWA()">
+      <span>💬</span> Bayar via WhatsApp
+    </button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <div class="nav-item">
+    <div class="nav-icon active">🏠</div>
+    <div class="nav-label active">Home</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">🧾</div>
+    <div class="nav-label">Transaksi</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">👤</div>
+    <div class="nav-label">Akun</div>
+  </div>
+</div>
+
+<script>
+var currentGame = '';
+var selectedProductData = null;
+
+var products = {
+  ML: [
+    {nama:'100 Diamond', harga:'Rp 26.000', popular: false},
+    {nama:'112 Diamond', harga:'Rp 31.000', popular: false},
+    {nama:'144 Diamond', harga:'Rp 40.000', popular: false},
+    {nama:'172 Diamond', harga:'Rp 46.000', popular: false},
+    {nama:'185 Diamond', harga:'Rp 48.000', popular: true},
+    {nama:'222 Diamond', harga:'Rp 58.000', popular: false},
+    {nama:'229 Diamond', harga:'Rp 62.000', popular: false},
+    {nama:'240 Diamond', harga:'Rp 64.000', popular: false},
+    {nama:'257 Diamond', harga:'Rp 66.000', popular: false},
+  ],
+  FF: [
+    {nama:'100 Diamond', harga:'Rp 14.000', popular: false},
+    {nama:'140 Diamond', harga:'Rp 18.000', popular: false},
+    {nama:'200 Diamond', harga:'Rp 26.000', popular: false},
+    {nama:'210 Diamond', harga:'Rp 28.000', popular: true},
+    {nama:'300 Diamond', harga:'Rp 38.000', popular: false},
+    {nama:'355 Diamond', harga:'Rp 43.000', popular: false},
+    {nama:'500 Diamond', harga:'Rp 60.000', popular: true},
+    {nama:'720 Diamond', harga:'Rp 85.000', popular: false},
+    {nama:'1000 Diamond', harga:'Rp 118.000', popular: false},
+    {nama:'1450 Diamond', harga:'Rp 170.000', popular: false},
+  ]
 };
 
-function openGame(game){
-currentGame=game;
-document.getElementById('homePage').classList.remove('active');
-document.getElementById('productPage').classList.add('active');
-renderProducts();
+function openGame(game) {
+  currentGame = game;
+  document.getElementById('homePage').classList.remove('active');
+  document.getElementById('productPage').classList.add('active');
+  document.getElementById('formOrder').classList.remove('visible');
+  document.getElementById('pageTitle').textContent = game === 'ML' ? 'Mobile Legends' : 'Free Fire';
+  document.getElementById('productHeading').textContent = game === 'ML' ? 'Diamond ML Pack' : 'Diamond FF Pack';
+  document.getElementById('productSub').textContent = 'Pilih nominal yang kamu butuhkan';
+  selectedProductData = null;
+  renderProducts();
 }
 
-function backHome(){
-document.getElementById('productPage').classList.remove('active');
-document.getElementById('homePage').classList.add('active');
-document.getElementById('formOrder').style.display='none';
+function backHome() {
+  document.getElementById('productPage').classList.remove('active');
+  document.getElementById('homePage').classList.add('active');
+  document.getElementById('formOrder').classList.remove('visible');
 }
 
-function renderProducts(){
-var list=document.getElementById('productList');
-list.innerHTML='';
-products[currentGame].forEach(function(item){
-list.innerHTML+=`<div class="product-card" onclick="selectProduct('${item.nama} - ${item.harga}')">
-<div class="product-title">${item.nama} ${currentGame}</div>
-<div class="product-sub">Proses Cepat • Legal</div>
-<div class="product-price">${item.harga}</div>
-</div>`;
-});
+function renderProducts() {
+  var list = document.getElementById('productList');
+  var cls = currentGame === 'ML' ? 'ml-card' : 'ff-card';
+  list.innerHTML = '';
+  products[currentGame].forEach(function(item, i) {
+    var popBadge = item.popular ? '<div class="product-badge">Populer</div>' : '';
+    list.innerHTML += `
+      <div class="product-card ${cls}" id="card-${i}" onclick="selectProduct(${i})">
+        ${popBadge}
+        <div class="product-diamond">💎</div>
+        <div class="product-name">${item.nama}</div>
+        <div class="product-tag">Proses Instan</div>
+        <div class="product-price">${item.harga}</div>
+      </div>`;
+  });
 }
 
-function selectProduct(product){
-document.getElementById('produk').value=product;
-document.getElementById('formOrder').style.display='block';
-window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+function selectProduct(idx) {
+  // Deselect all
+  document.querySelectorAll('.product-card').forEach(function(c) {
+    c.classList.remove('selected');
+    var chk = c.querySelector('.selected-check');
+    if (chk) chk.remove();
+  });
+
+  // Select clicked
+  var card = document.getElementById('card-' + idx);
+  card.classList.add('selected');
+  var chk = document.createElement('div');
+  chk.className = 'selected-check';
+  chk.innerHTML = '✓';
+  // Remove any existing popular badge if needed
+  var badge = card.querySelector('.product-badge');
+  if (badge) badge.style.display = 'none';
+  card.appendChild(chk);
+
+  var item = products[currentGame][idx];
+  selectedProductData = item;
+  document.getElementById('produk').value = item.nama + ' ' + currentGame + ' - ' + item.harga;
+  document.getElementById('chipText').textContent = item.nama + ' ' + currentGame;
+  document.getElementById('chipPrice').textContent = item.harga;
+
+  var form = document.getElementById('formOrder');
+  form.classList.add('visible');
+  setTimeout(function() {
+    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 100);
 }
 
-function kirimWA(){
-var nama=document.getElementById('nama').value;
-var idgame=document.getElementById('idgame').value;
-var produk=document.getElementById('produk').value;
-var pesan=`Halo Admin DLIStore,%0ASaya ingin order:%0AGame: ${currentGame}%0ANama: ${nama}%0AID: ${idgame}%0AProduk: ${produk}%0ASaya akan transfer ke DANA 0882021481133.`;
-window.open(`https://wa.me/62882021481133?text=${pesan}`,'_blank');
+function kirimWA() {
+  var nama = document.getElementById('nama').value.trim();
+  var idgame = document.getElementById('idgame').value.trim();
+  var produk = document.getElementById('produk').value;
+  if (!nama || !idgame) {
+    alert('Lengkapi nama dan ID game kamu dulu ya!');
+    return;
+  }
+  var pesan = `Halo Admin DLIStore,%0ASaya ingin order:%0A%0A🎮 Game: ${currentGame}%0A👤 Nama: ${nama}%0A🆔 ID: ${idgame}%0A💎 Produk: ${produk}%0A%0ASaya akan transfer ke DANA 0882021481133.%0ATerima kasih!`;
+  window.open(`https://wa.me/62882021481133?text=${pesan}`, '_blank');
 }
-</script></body>
+</script>
+</body>
 </html>
