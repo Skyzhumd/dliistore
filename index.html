@@ -552,8 +552,8 @@
     </div>
 
     <div class="field-group">
-      <label class="field-label">👤 Nama Kamu</label>
-      <input class="field-input" type="text" id="nama" placeholder="Masukkan nama...">
+      <label class="field-label">👤 nick game Kamu</label>
+      <input class="field-input" type="text" id="nick" placeholder="Masukkan nick...">
     </div>
     <div class="field-group">
       <label class="field-label">🎮 ID Game</label>
@@ -592,27 +592,46 @@ var selectedProductData = null;
 
 var products = {
   ML: [
-    {nama:'100 Diamond', harga:'Rp 26.000', popular: false},
-    {nama:'112 Diamond', harga:'Rp 31.000', popular: false},
-    {nama:'144 Diamond', harga:'Rp 40.000', popular: false},
-    {nama:'172 Diamond', harga:'Rp 46.000', popular: false},
-    {nama:'185 Diamond', harga:'Rp 48.000', popular: true},
-    {nama:'222 Diamond', harga:'Rp 58.000', popular: false},
-    {nama:'229 Diamond', harga:'Rp 62.000', popular: false},
-    {nama:'240 Diamond', harga:'Rp 64.000', popular: false},
-    {nama:'257 Diamond', harga:'Rp 66.000', popular: false},
+    {nick:'14 Diamond', harga:'Rp 4.500', popular: false},
+    {nick:'28 Diamond', harga:'Rp 8.500', popular: false},
+    {nick:'42 Diamond', harga:'Rp 12.500', popular: false},
+    {nick:'56 Diamond', harga:'Rp 17.000', popular: false},
+    {nick:'70 Diamond', harga:'Rp 21.000', popular: false},
+    {nick:'86 Diamond', harga:'Rp 25.000', popular: false},
+    {nick:'100 Diamond', harga:'Rp 29.000', popular: false},
+    {nick:'112 Diamond', harga:'Rp 34.000', popular: true},
+    {nick:'140 Diamond', harga:'Rp 43.000', popular: false},
+    {nick:'172 Diamond', harga:'Rp 51.000', popular: false},
+    {nick:'185 Diamond', harga:'Rp 53.000', popular: true},
+    {nick:'222 Diamond', harga:'Rp 64.000', popular: false},
+    {nick:'257 Diamond', harga:'Rp 73.000', popular: false},
+    {nick:'284 Diamond', harga:'Rp 81.000', popular: false},
+    {nick:'345 Diamond', harga:'Rp 96.000', popular: false},
+    {nick:'429 Diamond', harga:'Rp 118.000', popular: false},
+    {nick:'514 Diamond', harga:'Rp 140.000', popular: false},
+    {nick:'706 Diamond', harga:'Rp 192.000', popular: true},
+    {nick:'878 Diamond', harga:'Rp 238.000', popular: false},
+    {nick:'963 Diamond', harga:'Rp 260.000', popular: false},
+    {nick:'1136 Diamond', harga:'Rp 305.000', popular: false},
+    {nick:'1412 Diamond', harga:'Rp 378.000', popular: false},
+    {nick:'2195 Diamond', harga:'Rp 585.000', popular: false},
   ],
+
   FF: [
-    {nama:'100 Diamond', harga:'Rp 14.000', popular: false},
-    {nama:'140 Diamond', harga:'Rp 18.000', popular: false},
-    {nama:'200 Diamond', harga:'Rp 26.000', popular: false},
-    {nama:'210 Diamond', harga:'Rp 28.000', popular: true},
-    {nama:'300 Diamond', harga:'Rp 38.000', popular: false},
-    {nama:'355 Diamond', harga:'Rp 43.000', popular: false},
-    {nama:'500 Diamond', harga:'Rp 60.000', popular: true},
-    {nama:'720 Diamond', harga:'Rp 85.000', popular: false},
-    {nama:'1000 Diamond', harga:'Rp 118.000', popular: false},
-    {nama:'1450 Diamond', harga:'Rp 170.000', popular: false},
+    {nick:'5 Diamond', harga:'Rp 1.000', popular: false},
+    {nick:'12 Diamond', harga:'Rp 2.000', popular: false},
+    {nick:'50 Diamond', harga:'Rp 8.000', popular: false},
+    {nick:'70 Diamond', harga:'Rp 11.000', popular: false},
+    {nick:'100 Diamond', harga:'Rp 16.000', popular: true},
+    {nick:'140 Diamond', harga:'Rp 20.000', popular: false},
+    {nick:'210 Diamond', harga:'Rp 31.000', popular: true},
+    {nick:'300 Diamond', harga:'Rp 42.000', popular: false},
+    {nick:'355 Diamond', harga:'Rp 47.000', popular: false},
+    {nick:'500 Diamond', harga:'Rp 66.000', popular: true},
+    {nick:'720 Diamond', harga:'Rp 94.000', popular: false},
+    {nick:'1000 Diamond', harga:'Rp 130.000', popular: false},
+    {nick:'1450 Diamond', harga:'Rp 187.000', popular: false},
+    {nick:'2000 Diamond', harga:'Rp 255.000', popular: false},
   ]
 };
 
@@ -644,7 +663,7 @@ function renderProducts() {
       <div class="product-card ${cls}" id="card-${i}" onclick="selectProduct(${i})">
         ${popBadge}
         <div class="product-diamond">💎</div>
-        <div class="product-name">${item.nama}</div>
+        <div class="product-name">${item.nick}</div>
         <div class="product-tag">Proses Instan</div>
         <div class="product-price">${item.harga}</div>
       </div>`;
@@ -672,8 +691,8 @@ function selectProduct(idx) {
 
   var item = products[currentGame][idx];
   selectedProductData = item;
-  document.getElementById('produk').value = item.nama + ' ' + currentGame + ' - ' + item.harga;
-  document.getElementById('chipText').textContent = item.nama + ' ' + currentGame;
+  document.getElementById('produk').value = item.nick + ' ' + currentGame + ' - ' + item.harga;
+  document.getElementById('chipText').textContent = item.nick + ' ' + currentGame;
   document.getElementById('chipPrice').textContent = item.harga;
 
   var form = document.getElementById('formOrder');
@@ -684,14 +703,14 @@ function selectProduct(idx) {
 }
 
 function kirimWA() {
-  var nama = document.getElementById('nama').value.trim();
+  var nick = document.getElementById('nick').value.trim();
   var idgame = document.getElementById('idgame').value.trim();
   var produk = document.getElementById('produk').value;
-  if (!nama || !idgame) {
-    alert('Lengkapi nama dan ID game kamu dulu ya!');
+  if (!nick || !idgame) {
+    alert('Lengkapi nick dan ID game kamu dulu ya!');
     return;
   }
-  var pesan = `Halo Admin DLIStore,%0ASaya ingin order:%0A%0A🎮 Game: ${currentGame}%0A👤 Nama: ${nama}%0A🆔 ID: ${idgame}%0A💎 Produk: ${produk}%0A%0ASaya akan transfer ke DANA 0882021481133.%0ATerima kasih!`;
+  var pesan = `Halo Admin DLIStore,%0ASaya ingin order:%0A%0A🎮 Game: ${currentGame}%0A👤 nick game: ${nick}%0A🆔 ID: ${idgame}%0A💎 Produk: ${produk}%0A%0ASaya akan transfer ke DANA 0882021481133.%0ATerima kasih!`;
   window.open(`https://wa.me/62882021481133?text=${pesan}`, '_blank');
 }
 </script>
