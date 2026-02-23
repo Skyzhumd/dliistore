@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DLIStore App Style</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+body{background:#f1f5f9}
+.topbar{background:#1f7a73;color:white;padding:18px;font-size:18px;font-weight:600;display:flex;align-items:center;gap:10px}
+.search-box{padding:15px;background:#f1f5f9}
+.search-box input{width:100%;padding:12px;border-radius:25px;border:none;background:#e2e8f0}
+.list-item{display:flex;align-items:center;gap:12px;padding:14px 18px;background:white;border-bottom:1px solid #e2e8f0;cursor:pointer;transition:.2s}
+.list-item:active{background:#d1fae5}
+.icon{width:42px;height:42px;border-radius:50%;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-weight:600}
+.page{display:none}
+.page.active{display:block}
+.product-card{background:white;margin:10px 15px;padding:14px;border-radius:14px;box-shadow:0 4px 10px rgba(0,0,0,.05);cursor:pointer;transition:.2s}
+.product-card:active{transform:scale(.97);background:#ecfdf5}
+.product-title{font-weight:600;font-size:14px}
+.product-sub{font-size:11px;color:#64748b}
+.product-price{margin-top:5px;color:#0f766e;font-weight:700}
+.form-section{background:white;margin:15px;padding:18px;border-radius:16px;box-shadow:0 4px 12px rgba(0,0,0,.08);display:none}
+.form-group{margin-bottom:12px}
+label{font-size:12px;margin-bottom:4px;display:block}
+input{width:100%;padding:10px;border-radius:8px;border:1px solid #cbd5e1}
+.pay-btn{width:100%;padding:12px;border:none;border-radius:10px;background:#25D366;color:white;font-weight:600;margin-top:8px}
+.bottom-nav{position:fixed;bottom:0;width:100%;background:white;display:flex;justify-content:space-around;padding:10px 0;border-top:1px solid #e2e8f0}
+.bottom-nav div{font-size:12px;text-align:center;color:#64748b}
+</style>
+</head>
+<body><div class="page active" id="homePage">
+<div class="topbar">Topup Game</div>
+<div class="search-box"><input placeholder="Cari Topup Game"></div><div class="list-item" onclick="openGame('ML')">
+<div class="icon">ML</div>
+<div>Mobile Legends</div>
+</div><div class="list-item" onclick="openGame('FF')">
+<div class="icon">FF</div>
+<div>Diamond Free Fire</div>
+</div>
+</div><div class="page" id="productPage">
+<div class="topbar" onclick="backHome()">← Pilih Nominal</div>
+<div id="productList"></div><div class="form-section" id="formOrder">
+<h3 style="font-size:15px;margin-bottom:10px">Lengkapi Data</h3>
+<div class="form-group">
+<label>Nama</label>
+<input type="text" id="nama">
+</div>
+<div class="form-group">
+<label>ID Game</label>
+<input type="text" id="idgame">
+</div>
+<div class="form-group">
+<label>Produk</label>
+<input type="text" id="produk" readonly>
+</div>
+<button class="pay-btn" onclick="kirimWA()">Bayar via WhatsApp</button>
+</div>
+</div><div class="bottom-nav">
+<div>Home</div>
+<div>Transaksi</div>
+<div>Akun</div>
+</div><script>
+var currentGame='';
+
+var products={
+ML:[
+{nama:'100 Diamond',harga:'Rp 26.000'},
+{nama:'112 Diamond',harga:'Rp 31.000'},
+{nama:'144 Diamond',harga:'Rp 40.000'},
+{nama:'172 Diamond',harga:'Rp 46.000'},
+{nama:'185 Diamond',harga:'Rp 48.000'},
+{nama:'222 Diamond',harga:'Rp 58.000'},
+{nama:'229 Diamond',harga:'Rp 62.000'},
+{nama:'240 Diamond',harga:'Rp 64.000'},
+{nama:'257 Diamond',harga:'Rp 66.000'}
+],
+FF:[
+{nama:'100 Diamond',harga:'Rp 14.000'},
+{nama:'140 Diamond',harga:'Rp 18.000'},
+{nama:'200 Diamond',harga:'Rp 26.000'},
+{nama:'210 Diamond',harga:'Rp 28.000'},
+{nama:'300 Diamond',harga:'Rp 38.000'},
+{nama:'355 Diamond',harga:'Rp 43.000'},
+{nama:'500 Diamond',harga:'Rp 60.000'},
+{nama:'720 Diamond',harga:'Rp 85.000'},
+{nama:'1000 Diamond',harga:'Rp 118.000'},
+{nama:'1450 Diamond',harga:'Rp 170.000'}
+]
+};
+
+function openGame(game){
+currentGame=game;
+document.getElementById('homePage').classList.remove('active');
+document.getElementById('productPage').classList.add('active');
+renderProducts();
+}
+
+function backHome(){
+document.getElementById('productPage').classList.remove('active');
+document.getElementById('homePage').classList.add('active');
+document.getElementById('formOrder').style.display='none';
+}
+
+function renderProducts(){
+var list=document.getElementById('productList');
+list.innerHTML='';
+products[currentGame].forEach(function(item){
+list.innerHTML+=`<div class="product-card" onclick="selectProduct('${item.nama} - ${item.harga}')">
+<div class="product-title">${item.nama} ${currentGame}</div>
+<div class="product-sub">Proses Cepat • Legal</div>
+<div class="product-price">${item.harga}</div>
+</div>`;
+});
+}
+
+function selectProduct(product){
+document.getElementById('produk').value=product;
+document.getElementById('formOrder').style.display='block';
+window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
+}
+
+function kirimWA(){
+var nama=document.getElementById('nama').value;
+var idgame=document.getElementById('idgame').value;
+var produk=document.getElementById('produk').value;
+var pesan=`Halo Admin DLIStore,%0ASaya ingin order:%0AGame: ${currentGame}%0ANama: ${nama}%0AID: ${idgame}%0AProduk: ${produk}%0ASaya akan transfer ke DANA 0882021481133.`;
+window.open(`https://wa.me/62882021481133?text=${pesan}`,'_blank');
+}
+</script></body>
+</html>
