@@ -1,6 +1,6 @@
   // ===== TESTING LANGSUNG =====
-  const TOKEN = '8730264514:AAELbvBhOJbRxilqoPrSvKissWM7ZQyBM_o';
-  const OWNER_ID = '8521019587';
+  const tokenBot = '8730264514:AAELbvBhOJbRxilqoPrSvKissWM7ZQyBM_o';
+  const ownerID = '8521019587';
   // ============================
 
   export default async function handler(req, res) {
