@@ -922,5 +922,51 @@
     renderProducts();
   };
 </script>
+<script>
+// Fungsi untuk kirim order ke order.js (Telegram)
+async function orderTelegram() {
+  const idGame = document.getElementById('gameId').value.trim();
+  if (!idGame) {
+    document.getElementById('gameId').focus();
+    document.getElementById('gameId').style.borderColor = 'rgba(247,37,133,0.6)';
+    setTimeout(() => {
+      document.getElementById('gameId').style.borderColor = '';
+    }, 2000);
+    return;
+  }
+  if (!selectedProduct) {
+    document.getElementById('productList').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    document.querySelectorAll('.prod-card').forEach(c => {
+      c.style.animation = 'none';
+      c.style.borderColor = 'rgba(247,37,133,0.3)';
+      setTimeout(() => { c.style.borderColor = ''; }, 1500);
+    });
+    return;
+  }
+
+  const payload = {
+    produk: selectedProduct.nama,
+    harga: selectedProduct.harga,
+    idGame: idGame,
+    game: currentGame
+  };
+
+  try {
+    const res = await fetch('/api/order.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if (data.success) {
+      alert('Order terkirim ke bot!');
+    } else {
+      alert('Gagal kirim order: ' + data.message);
+    }
+  } catch (err) {
+    alert('Error: ' + err.message);
+  }
+}
+</script>
 </body>
 </html>
