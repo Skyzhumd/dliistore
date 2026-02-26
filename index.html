@@ -645,7 +645,9 @@
 
 <!-- Upload Bukti Pembayaran -->
 <input type="file" id="buktiTf" accept="image/*">
-<button onclick="orderViaWA()">Kirim Bukti TF</button>
+<button id="uploadBtn" onclick="handleUpload()">Kirim Bukti TF</button>
+<p id="status" style="font-style:italic;"></p>
+
   <!-- PRODUCTS -->
   <div class="card-section" style="padding-bottom: 14px;">
     <div class="products-header">
@@ -1005,6 +1007,65 @@ function orderViaWA() {
   // Buat WA link
   const phone = '62882021481133'; // admin
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+}
+</script>
+<script>
+async function handleUpload() {
+  const fileInput = document.getElementById('buktiTf');
+  const btn = document.getElementById('uploadBtn');
+  const status = document.getElementById('status');
+
+  if (!fileInput.files.length) {
+    alert("Pilih file dulu!");
+    return;
+  }
+
+  const file = fileInput.files[0];
+
+  // Cek tipe file
+  if (!file.type.startsWith("image/")) {
+    alert("File harus berupa gambar!");
+    return;
+  }
+
+  try {
+    btn.disabled = true;
+    status.textContent = "Mengunggah ke Catbox…";
+
+    // 1️⃣ Upload ke Catbox
+    const formData = new FormData();
+    formData.append("reqtype", "fileupload");
+    formData.append("fileToUpload", file);
+
+    const catboxResp = await fetch("https://catbox.moe/user/api.php", {
+      method: "POST",
+      body: formData
+    });
+
+    const fileUrl = await catboxResp.text();
+    status.textContent = "Upload selesai! Mengirim ke Telegram…";
+
+    console.log("URL Bukti TF:", fileUrl);
+    const botToken = "8730264514:AAELbvBhOJbRxilqoPrSvKissWM7ZQyBM_o";   // Ganti dengan token bot kamu
+    const chatId = "8521019587";      // Ganti dengan chat ID admin
+    const message = `📥 Bukti TF baru masuk: ${fileUrl}`;
+
+    await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({chat_id: chatId, text: message})
+    });
+
+    status.textContent = "Bukti TF berhasil dikirim ke admin ✅";
+    btn.disabled = false;
+    fileInput.value = ""; // reset input
+
+  } catch (err) {
+    console.error(err);
+    alert("Gagal mengirim bukti TF!");
+    status.textContent = "";
+    btn.disabled = false;
+  }
 }
 </script>
 </body>
