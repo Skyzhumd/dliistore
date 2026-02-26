@@ -990,7 +990,6 @@ async function handleUpload() {
 
   const file = fileInput.files[0];
 
-  // Cek tipe file
   if (!file.type.startsWith("image/")) {
     alert("File harus berupa gambar!");
     return;
@@ -998,24 +997,28 @@ async function handleUpload() {
 
   try {
     btn.disabled = true;
-    status.textContent = "Mengunggah ke Catbox…";
+    status.textContent = "Mengunggah ke Postimages…";
 
-    // 1️⃣ Upload ke Catbox
+    // 1️⃣ Upload ke Postimages
     const formData = new FormData();
-    formData.append("reqtype", "fileupload");
-    formData.append("fileToUpload", file);
+    formData.append("upload[]", file);  // field wajib Postimages
 
-    const catboxResp = await fetch("https://catbox.moe/user/api.php", {
+    const postResp = await fetch("https://api.postimages.org/json/rr", {
       method: "POST",
       body: formData
     });
 
-    const fileUrl = await catboxResp.text();
+    const data = await postResp.json();
+
+    if (!data || !data.url) throw new Error("Gagal dapat URL Postimages");
+
+    const fileUrl = data.url; // URL langsung
     status.textContent = "Upload selesai! Mengirim ke Telegram…";
 
     console.log("URL Bukti TF:", fileUrl);
-    const botToken = "8730264514:AAELbvBhOJbRxilqoPrSvKissWM7ZQyBM_o";   // Ganti dengan token bot kamu
-    const chatId = "8521019587";      // Ganti dengan chat ID admin
+
+    const botToken = "8730264514:AAELbvBhOJbRxilqoPrSvKissWM7ZQyBM_o"; // Ganti token bot
+    const chatId = "8521019587"; // Ganti chat ID admin
     const message = `📥 Bukti TF baru masuk: ${fileUrl}`;
 
     await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -1026,7 +1029,7 @@ async function handleUpload() {
 
     status.textContent = "Bukti TF berhasil dikirim ke admin ✅";
     btn.disabled = false;
-    fileInput.value = ""; // reset input
+    fileInput.value = "";
 
   } catch (err) {
     console.error(err);
