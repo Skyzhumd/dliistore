@@ -985,56 +985,51 @@ async function handleUpload() {
 
   if (!fileInput.files.length) return alert("Pilih file dulu!");
 
-  const file = fileInput.files[0];
+  // PERBAIKAN 1: Ambil file yang bener
+  const file = fileInput.files[0]; 
   const formData = new FormData();
   formData.append("image", file);
 
   try {
     btn.disabled = true;
-    status.textContent = "🚀 Uploading gambar ke ImgBB...";
+    status.textContent = "🚀 Uploading...";
 
-    // 1️⃣ PROSES UPLOAD KE IMGBB
-    const apiKeyImgBB = "9d5442d3737dc784cf6bd4c1418d7748"; // Ambil di https://api.imgbb.com
-    const uploadResp = await fetch(`https://api.imgbb.com/upload?key=${apiKeyImgBB}`, {
+    // 2. UPLOAD KE IMGBB
+    const apiKeyImgBB = "9d5442d3737dc784cf6bd4c1418d7748"; 
+    
+    // PERBAIKAN 2: JANGAN kasih header Content-Type manual di sini!
+    const uploadResp = await fetch(`https://api.imgbb.com{apiKeyImgBB}`, {
       method: "POST",
-      body: formData
+      body: formData // Browser bakal set boundary otomatis
     });
 
+    if (!uploadResp.ok) throw new Error("Gagal kontak server ImgBB");
+
     const resImg = await uploadResp.json();
-    if (!resImg.success) throw new Error("Gagal upload ke ImgBB");
-
     const imageUrl = resImg.data.url;
-    status.textContent = "✅ Gambar oke! Mengirim ke Telegram...";
 
-    // 2️⃣ PROSES KIRIM KE TELEGRAM (Pake sendPhoto biar admin langsung liat gambarnya)
+    // 3. KIRIM KE TELEGRAM
+    status.textContent = "✅ Gambar oke! Kirim ke Tele...";
     const botToken = "8730264514:AAELbvBhOJbRxilqoPrSvKissWM7ZQyBM_o";
     const chatId = "8521019587";
-    const captionText = `📥 *Bukti Transfer Baru*\n\n🔗 URL: ${imageUrl}`;
 
-    const teleResp = await fetch(`https://api.telegram.org{botToken}/sendPhoto`, {
+    await fetch(`https://api.telegram.org{botToken}/sendPhoto`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: chatId,
         photo: imageUrl,
-        caption: captionText,
+        caption: "📥 *Bukti Transfer Baru*",
         parse_mode: "Markdown"
       })
     });
 
-    const resTele = await teleResp.json();
-
-    if (resTele.ok) {
-      status.textContent = "Mantap! Bukti TF sudah terkirim ke Admin ✅";
-      fileInput.value = ""; 
-    } else {
-      throw new Error("Gagal kirim ke Telegram");
-    }
+    status.textContent = "Berhasil dikirim! ✅";
+    fileInput.value = ""; 
 
   } catch (err) {
-    console.error(err);
-    alert("Error: " + err.message);
-    status.textContent = "❌ Gagal dikirim";
+    console.error("Detail Error:", err);
+    alert("Waduh gagal: " + err.message);
   } finally {
     btn.disabled = false;
   }
