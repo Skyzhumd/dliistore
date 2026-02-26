@@ -644,14 +644,8 @@
 </div>
 
 <!-- Upload Bukti Pembayaran -->
-<div class="card-section">
-  <div class="section-label">Upload Bukti Pembayaran</div>
-  <input type="file" id="paymentProof" accept="image/*">
-  <div class="input-hint">
-    <span>💡</span>
-    <span>Upload bukti transfer / struk pembayaran</span>
-  </div>
-</div>
+<input type="file" id="buktiTf" accept="image/*">
+<button onclick="orderViaWA()">Kirim Bukti TF</button>
   <!-- PRODUCTS -->
   <div class="card-section" style="padding-bottom: 14px;">
     <div class="products-header">
@@ -991,6 +985,26 @@ async function orderTelegram() {
   } catch (err) {
     alert('Error: ' + err.message);
   }
+}
+</script>
+<script>
+function orderViaWA() {
+  const idGame = document.getElementById('gameId').value.trim();
+  const product = selectedProduct ? selectedProduct.nama : null;
+  const noDana = document.getElementById('noDana').value.trim();
+
+  if(!idGame || !product){
+    alert('Lengkapi semua field');
+    return;
+  }
+
+  // Text WA
+  const text = `Halo Admin DliiStore!
+  saya mau konfirmasi pembayaran order yang sudah di kirim via bot telegram.`;
+
+  // Buat WA link
+  const phone = '62882021481133'; // admin
+  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
 }
 </script>
 </body>
