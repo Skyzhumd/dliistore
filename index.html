@@ -941,14 +941,6 @@
   };
 </script>
 <script>
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = error => reject(error);
-    reader.readAsDataURL(file);
-  });
-}
 
 async function orderTelegram() {
   const idGame = document.getElementById('gameId').value.trim();
@@ -961,18 +953,14 @@ async function orderTelegram() {
     return;
   }
 
-  const fileInput = document.getElementById('paymentProof');
-  let base64Image = null;
-  if (fileInput.files[0]) {
-    base64Image = await fileToBase64(fileInput.files[0]);
-  }
+  
 
   const payload = {
     produk: selectedProduct.nama,
     harga: selectedProduct.harga,
     idGame: idGame,
     game: currentGame,
-    image: base64Image
+   
   };
 
   try {
@@ -982,31 +970,11 @@ async function orderTelegram() {
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    if (data.success) alert('Order + bukti terkirim ke bot!');
+    if (data.success) alert('Order terkirim ke bot!');
     else alert('Gagal kirim order: ' + data.message);
   } catch (err) {
     alert('Error: ' + err.message);
   }
-}
-</script>
-<script>
-function orderViaWA() {
-  const idGame = document.getElementById('gameId').value.trim();
-  const product = selectedProduct ? selectedProduct.nama : null;
-  const noDana = document.getElementById('noDana').value.trim();
-
-  if(!idGame || !product){
-    alert('Lengkapi semua field');
-    return;
-  }
-
-  // Text WA
-  const text = `Halo Admin DliiStore!
-  saya mau konfirmasi pembayaran order yang sudah di kirim via bot telegram.`;
-
-  // Buat WA link
-  const phone = '62882021481133'; // admin
-  window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
 }
 </script>
 <script>
