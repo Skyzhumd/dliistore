@@ -630,6 +630,28 @@
     </div>
   </div>
 
+<!-- no dana admin -->
+<div class="card-section">
+  <div class="section-label">Nomor Tujuan Transfer</div>
+  <div class="input-wrap">
+    <div class="input-icon">💳</div>
+    <input type="text" value="0882021481133" readonly>
+  </div>
+  <div class="input-hint">
+    <span>💡</span>
+    <span>Transfer dulu ke nomor di atas sebelum order</span>
+  </div>
+</div>
+
+<!-- Upload Bukti Pembayaran -->
+<div class="card-section">
+  <div class="section-label">Upload Bukti Pembayaran</div>
+  <input type="file" id="paymentProof" accept="image/*">
+  <div class="input-hint">
+    <span>💡</span>
+    <span>Upload bukti transfer / struk pembayaran</span>
+  </div>
+</div>
   <!-- PRODUCTS -->
   <div class="card-section" style="padding-bottom: 14px;">
     <div class="products-header">
@@ -923,32 +945,38 @@
   };
 </script>
 <script>
-// Fungsi untuk kirim order ke order.js (Telegram)
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
 async function orderTelegram() {
   const idGame = document.getElementById('gameId').value.trim();
   if (!idGame) {
-    document.getElementById('gameId').focus();
-    document.getElementById('gameId').style.borderColor = 'rgba(247,37,133,0.6)';
-    setTimeout(() => {
-      document.getElementById('gameId').style.borderColor = '';
-    }, 2000);
+    alert('Isi ID Game dulu bro!');
     return;
   }
   if (!selectedProduct) {
-    document.getElementById('productList').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    document.querySelectorAll('.prod-card').forEach(c => {
-      c.style.animation = 'none';
-      c.style.borderColor = 'rgba(247,37,133,0.3)';
-      setTimeout(() => { c.style.borderColor = ''; }, 1500);
-    });
+    alert('Pilih produk dulu bro!');
     return;
+  }
+
+  const fileInput = document.getElementById('paymentProof');
+  let base64Image = null;
+  if (fileInput.files[0]) {
+    base64Image = await fileToBase64(fileInput.files[0]);
   }
 
   const payload = {
     produk: selectedProduct.nama,
     harga: selectedProduct.harga,
     idGame: idGame,
-    game: currentGame
+    game: currentGame,
+    image: base64Image
   };
 
   try {
@@ -958,11 +986,8 @@ async function orderTelegram() {
       body: JSON.stringify(payload)
     });
     const data = await res.json();
-    if (data.success) {
-      alert('Order terkirim ke bot!');
-    } else {
-      alert('Gagal kirim order: ' + data.message);
-    }
+    if (data.success) alert('Order + bukti terkirim ke bot!');
+    else alert('Gagal kirim order: ' + data.message);
   } catch (err) {
     alert('Error: ' + err.message);
   }
